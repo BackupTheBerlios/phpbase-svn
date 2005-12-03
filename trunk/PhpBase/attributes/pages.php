@@ -8,16 +8,19 @@
 
 function gb_validate_pages($value)
 {
-    return true;
+    return empty($value) ? true : (is_integer($value) && $value > 0);
 }
 
 function gb_suggest_pages($value)
 {
+    gb_cast_pages($value);
     return $value;
 }
 
 function gb_cast_pages(&$value)
 {
+    $value = (int)floor(intval($value));
+    $value = $value == 0 ? '' : $value;
 }
 
 ?>

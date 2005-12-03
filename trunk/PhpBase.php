@@ -39,7 +39,6 @@ class PhpBase
     var $_renders = array();
     var $_ftp_server = 'uploads.google.com';
     
-
     function PhpBase($schema_name = 'Default')
     {
         if(file_exists(PHPBASE_DIR.'PhpBase'.DS.'schemes'.DS.$schema_name.'.php')){

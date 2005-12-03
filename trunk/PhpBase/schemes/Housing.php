@@ -7,6 +7,10 @@ $schema = array(
     'bathrooms','square_footage','school_district',
     'hoa_dues','year','agent','location'),
     
+    
+//agent, area, bathrooms, bedrooms, expiration_date, hoa_dues, label, listing_type. location, price, price_type, payment_accepted, payment_notes, property_type, tax_region, tax_percent, year, expiration_date_time, image_link
+    
+    
 '_not_null' => array('title','description','link','id','price_type','currency', 'listing_type', 'payment_accepted'),
 
 '_not_zero' => array('price','year'),
