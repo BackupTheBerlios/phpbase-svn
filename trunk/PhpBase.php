@@ -38,7 +38,7 @@ class PhpBase
     var $_rendered;
     var $_renders = array();
     var $_ftp_server = 'uploads.google.com';
-    
+
     function PhpBase($schema_name = 'Default')
     {
         if(file_exists(PHPBASE_DIR.'PhpBase'.DS.'schemes'.DS.$schema_name.'.php')){
@@ -62,9 +62,9 @@ class PhpBase
         if($this->_appendDomainToId && !empty($this->_domain) && isset($single_item_details['id'])){
             $single_item_details['id'] = $this->_domain.';'.$single_item_details['id'];
         }
-        
+
         $single_item_details = $this->_normalizeColumnNames($single_item_details);
-        
+
         $Item =& new GoogleBaseItem($this->_schema_name);
         if($Item->setAttributes($single_item_details)){
 
@@ -79,11 +79,11 @@ class PhpBase
             return $Item;
         }
         $error = $this->_getUserErrorsArray($Item->getFieldsWithErrors(), $single_item_details);
-        $this->_errors[] = $error;
+        $this->_errors[] = array($single_item_details['id'],$error);
         $this->_lastError = 'These fields got validation  errors: '.var_export($error,true);
         return false;
     }
-    
+
 
     function addItems($data_array)
     {
@@ -145,11 +145,11 @@ class PhpBase
         $this->_rendered = $Render->render($this->_Items);
         return $this->_rendered;
     }
-    
+
     function send($user_name = '', $password = '', $file_name = '')
     {
         $this->_rendered = empty($this->_rendered) ? $this->render() : $this->_rendered;
-        
+
         $file_name = empty($file_name) ? $this->_domain.'_'.$this->_schema_name.'_PhpBase.txt' : $file_name;
         if(!class_exists('AkFtpClient')){
             @include_once(PHPBASE_DIR.'PhpBase'.DS.'AkFtpClient.php');
@@ -159,12 +159,21 @@ class PhpBase
         }
         return AkFtpClient::put_contents($file_name, $this->_rendered);
     }
-    
+
     function getAttributesWithProblems()
     {
-        return $this->_errors;
+        $errors = array();
+        foreach ($this->_errors as $ItemWithErrors){
+            $item_id = array_shift($ItemWithErrors);
+            $errors[$item_id] = "<h2 class='error'>There where errors on item ".$item_id.":</h2>\n<ul>";
+            foreach ($ItemWithErrors[0] as $field=>$value){
+                $errors[$item_id] .= "<li><b>$field:</b> \"$value\"</li>\n";
+            }
+            $errors[$item_id] .= "</ul>";
+        }
+        return $errors;
     }
-    
+
 
     function &_loadRender($format)
     {
@@ -214,7 +223,7 @@ class PhpBase
         }
         return $include_custom_attributes ? array_merge($this->_definedAttributes, $this->_customAttributes) : $this->_definedAttributes;
     }
-    
+
     function _normalizeColumnNames($data_array)
     {
         $normalized = array();
