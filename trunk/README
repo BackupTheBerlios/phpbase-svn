@@ -1,4 +1,4 @@
-PhpBase 0.1a (http://www.phpbase.org)
+PhpBase 0.2a (http://www.phpbase.org)
 
 What is it?
 PhpBase is a free PHP library useful for submitting you website
@@ -30,7 +30,7 @@ It has an enormous deck for up to 10 boats' ),
 'title'=>'Apartment in San Francisco', 
 'description' => 'Cute apartment for sublet in 
 downtown San Francisco'),
-//.........more properties here
+//.........you need to add more properties here
 );
 
 if($PhpBase->addItems($my_properties)){
@@ -59,6 +59,18 @@ if(!$PhpBase->addItem($single_property_array)){
 and the send it normally data as on previous example using
 $PhpBase->send('username', 
 'password', 'filename');
+
+OR
+
+You can also send the data as a Rss2 feed by setting an array with options as 4th parameter
+$PhpBase->send('username', 'password', 'filename.xml',
+   array(
+       'format'=>'Rss2',
+       'title'=> 'My Rss2 channel title',
+       'description'=> 'My Rss2 channel description',
+       'link'=> 'My Rss2 channel link'
+   )
+);
 
 In order to create you own schema have a look to schemes/Housing.php and to the attribute helpers in the attributes/ folder 
 
