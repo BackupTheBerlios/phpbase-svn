@@ -1,7 +1,7 @@
 PHP BASE CHANGE LOG
 -----------------------------------------
 
-Version 0.02a 2006-02-10
+Version 0.2a 2006-02-10
 ---------------------------------------------
 - Added extra (array)$options param to PhpBase::send to set options like 'format = Rss2 or Tabbed'...
 - Added new Rss2 Render for sumiting Rss2 files to google base.
@@ -10,6 +10,6 @@ Version 0.02a 2006-02-10
 - Added News And Articles on schemes/NewsAndArticles.php
 
 
-Version 0.01a 2005-12-02
+Version 0.1a 2005-12-02
 ---------------------------------------------
 - Initial release
