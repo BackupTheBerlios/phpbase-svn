@@ -79,7 +79,7 @@ class PhpBase
             return $Item;
         }
         $error = $this->_getUserErrorsArray($Item->getFieldsWithErrors(), $single_item_details);
-        $this->_errors[] = array($single_item_details['id'],$error);
+        $this->_errors[] = array(isset($single_item_details['id']) ? $single_item_details['id'] : null,$error);
         $this->_lastError = 'These fields got validation  errors: '.var_export($error,true);
         return false;
     }
@@ -138,17 +138,22 @@ class PhpBase
     }
 
 
-    function render($format = 'Tabbed', $include_custom_attributes = true)
+    function render($options = array())
     {
-        $Render = $this->_loadRender($format);
-        $Render->setSchema($this->getSchema($include_custom_attributes));
+        $default_options = array(
+        'include_custom_attributes' => true
+        );
+        $options = array_merge($default_options,$options);
+
+        $Render = $this->_loadRender($options);
+        $Render->setSchema($this->getSchema($options['include_custom_attributes']));
         $this->_rendered = $Render->render($this->_Items);
         return $this->_rendered;
     }
 
-    function send($user_name = '', $password = '', $file_name = '')
+    function send($user_name = '', $password = '', $file_name = '', $options = array())
     {
-        $this->_rendered = empty($this->_rendered) ? $this->render() : $this->_rendered;
+        $this->_rendered = empty($this->_rendered) ? $this->render($options) : $this->_rendered;
 
         $file_name = empty($file_name) ? $this->_domain.'_'.$this->_schema_name.'_PhpBase.txt' : $file_name;
         if(!class_exists('AkFtpClient')){
@@ -175,16 +180,22 @@ class PhpBase
     }
 
 
-    function &_loadRender($format)
+    function &_loadRender($options = array())
     {
-        $format = ucfirst($format);
+        $default_options = array(
+        'format' => 'Tabbed',
+        );
+        $options = array_merge($default_options,$options);
+
+        $format = $this->camelize($this->underscore($options['format']));
+
         if(!isset($this->_renders[$format])){
             $render_class_name = $format.'Render';
             include_once(PHPBASE_DIR.'PhpBase'.DS.'renders'.DS.$format.'.php');
             if(!class_exists($render_class_name)){
                 trigger_error('Could not find render '.$format.' on the renders/ directory', E_USER_ERROR);
             }
-            $this->_renders[$format] = new $render_class_name();
+            $this->_renders[$format] = new $render_class_name($options);
         }
         return $this->_renders[$format];
     }
@@ -232,6 +243,21 @@ class PhpBase
             $normalized[$column]  = $value;
         }
         return $normalized;
+    }
+
+    function camelize($word)
+    {
+        if(preg_match_all('/\/(.?)/',$word,$got)){
+            $word = str_replace($got[0],$got[1],$word);
+        }
+        return str_replace(' ','',ucwords(preg_replace('/[^A-Z^a-z^0-9^:]+/',' ',$word)));
+    }
+
+    function underscore($word)
+    {
+        return strtolower(preg_replace('/[^A-Z^a-z^0-9^\/]+/','_',
+        preg_replace('/([a-z\d])([A-Z])/','\1_\2',
+        preg_replace('/([A-Z]+)([A-Z][a-z])/','\1_\2',$word))));
     }
 
 }

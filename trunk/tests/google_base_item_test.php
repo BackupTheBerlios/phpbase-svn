@@ -120,7 +120,7 @@ class Test_of_GoogleBaseItem extends UnitTestCase
 
         $expected = array (
         'title' => 'Rental house in Carlet',
-        'description' => 'Beautiful house with views to the horta.',
+        'description' => 'Beautiful house with views to the horta',
         'link' => 'http://inmoeasy.com/property/403',
         'image_link' => 'http://inmoeasy.com/property/403/image',
         'id' => 'inmoeasy.com,403',

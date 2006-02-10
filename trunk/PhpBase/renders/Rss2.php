@@ -26,41 +26,66 @@ require_once PHPBASE_DIR.'PhpBase'.DS.'GoogleBaseRender.php';
 
 class Rss2Render extends GoogleBaseRender
 {
+    var $shared_rss2_attributes = array('title','description','link');
+    var $channel_details = array();
+
+    function Rss2Render($channel_details = array())
+    {
+        $_empty_channel_details = array_diff($this->shared_rss2_attributes, $channel_details);
+        if(empty($_empty_channel_details)){
+            $this->channel_details = $channel_details;
+        }else {
+            trigger_error(
+            '<h1>Ooops!, You forgot to set the details ('.join(', ',$_empty_channel_details).') for the Rss2 channel.</h1>
+            <pre>'.
+            'call $PhpBase->send(\'user_name\', \'password\', \'file_name.xml\', '.
+            '    array('.
+            '        \'format\'=>\'Rss2\', '.
+            '        \'title\'=> \'My Rss2 channel title\', '.
+            '        \'description\'=> \'My Rss2 channel description\', '.
+            '        \'link\'=> \'My Rss2 channel link\''.
+            '    )
+            );
+            </pre>
+            ');
+        }
+    }
+
     function render($data_rows)
     {
         $has_custom_attributes = false;
         $rss2_items = '';
 
-        if(isset($data_rows[0]['title'])){
-            $rss2_details = array_shift(isset($data_rows));
-        }
-
         foreach ($data_rows as $data_row){
-            $_tmp_columns = array();
+            $_tmp_columns = $_tmp_heading_columns = array();
+
             foreach ($this->schema as $column){
                 $column_name = $column[1] == ':' ? substr($column,2) : $column;
-                if($column != 'title' && $column != 'description' && $column != 'link'){
+
+                if(!in_array($column, $this->shared_rss2_attributes)){
                     if($column[1] == ':'){
                         $has_custom_attributes = true;
                         $column = $column;
                     }else{
                         $column = 'g:'.$column;
                     }
+                    $_tmp_columns[] = "<$column>".(isset($data_row->$column_name) ? $data_row->$column_name : '')."</$column>";
+                }else{
+                    $_tmp_heading_columns[array_shift(array_keys($this->shared_rss2_attributes,$column))] = "<$column>".$data_row->$column_name ."</$column>";
                 }
-                $_tmp_columns[] = "<$column>".(isset($data_row->$column_name) ? $data_row->$column_name : '')."</$column>";
             }
-
-            $rss2_items .= "\n<item>\n".implode("\n",$_tmp_columns)."\n</item>\n";
+            ksort($_tmp_heading_columns);
+            $rss2_items .= "\n<item>\n".implode("\n",array_merge($_tmp_heading_columns,$_tmp_columns))."\n</item>\n";
         }
         $custom_namespace = $has_custom_attributes ? "\nxmlns:c=\"http://base.google.com/cns/1.0\"" : '';
 
-        return 
+        return
         "<?xml version=\"1.0\"?>".
         "<rss version=\"2.0\">".
         "<channel xmlns:g=\"http://base.google.com/ns/1.0\" $custom_namespace>".
-        "<title>{$rss2_details['title']}</title>".
-        "<link>{$rss2_details['link']}</link>".
-        "<description>{$rss2_details['description']}</description>".
+        "<title>{$this->channel_details['title']}</title>".
+        "<link>{$this->channel_details['link']}</link>".
+        "<description>{$this->channel_details['description']}</description>".
         $rss2_items.
         "</channel>".
         "</rss>";
