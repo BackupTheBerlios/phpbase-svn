@@ -31,7 +31,7 @@ class Rss2Render extends GoogleBaseRender
 
     function Rss2Render($channel_details = array())
     {
-        $_empty_channel_details = array_diff($this->shared_rss2_attributes, $channel_details);
+        $_empty_channel_details = array_diff(array_values($shared_rss2_attributes),array_keys($channel_details));
         if(empty($_empty_channel_details)){
             $this->channel_details = $channel_details;
         }else {

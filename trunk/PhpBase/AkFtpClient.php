@@ -28,7 +28,7 @@ class AkFtpClient
         if($ftp = AkFtpClient::connect()){
             $file = str_replace('\\','/',$file);
             $tmpfname = tempnam('/tmp', 'tmp');
-            $temp = fopen($tmpfname, 'w+');
+            $temp = fopen($tmpfname, 'a+');
             fwrite($temp, $contents);
             fclose($temp);
             $temp = fopen($tmpfname, 'rb');
