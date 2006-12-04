@@ -184,8 +184,8 @@ class Test_of_PhpBase extends UnitTestCase
         $this->assertTrue($this->PhpBase->addItems($items));
   
         $this->assertEqual(trim('title	description	link	image_link	id	expiration_date	label	price	price_type	currency	payment_accepted	listing_type	property_type	bedrooms	bathrooms	square_footage	school_district	hoa_dues	year	agent	location
-Rental house in Carlet	Beautiful house with views to the horta	http://inmoeasy.com/property/9	http://inmoeasy.com/property/9/image,http://inmoeasy.com/property/9/image2	example.com;9	2006-12-20	house,rental hose,spanish rental,carlet,vacation house	50000.00	negotiable	eur	Cash,Wire Transfer	for sale	Town House	4	3	400			1994	OpenHabitat	Carlet, Valencia, Spain
-Rental house in Carlet	Beautiful house with views to the horta	http://inmoeasy.com/property/10	http://inmoeasy.com/property/10/image,http://inmoeasy.com/property/10/image2	example.com;10	2006-12-20	house,rental hose,spanish rental,carlet,vacation house	50000.00	negotiable	eur	Cash,Wire Transfer	for sale	Town House	4	3	400			1995	OpenHabitat	Carlet, Valencia, Spain'),
+Rental house in Carlet	Beautiful house with views to the horta	http://inmoeasy.com/property/9	http://inmoeasy.com/property/9/image,http://inmoeasy.com/property/9/image2	example.com;9	2006-12-20	house,rental hose,spanish rental,carlet,vacation house	500.00	negotiable	eur	Cash,Wire Transfer	for sale	Town House	4	3	400			1994	OpenHabitat	Carlet, Valencia, Spain
+Rental house in Carlet	Beautiful house with views to the horta	http://inmoeasy.com/property/10	http://inmoeasy.com/property/10/image,http://inmoeasy.com/property/10/image2	example.com;10	2006-12-20	house,rental hose,spanish rental,carlet,vacation house	500.00	negotiable	eur	Cash,Wire Transfer	for sale	Town House	4	3	400			1995	OpenHabitat	Carlet, Valencia, Spain'),
     trim($this->PhpBase->render()));
     
         $this->_tab_data = $this->PhpBase->render();

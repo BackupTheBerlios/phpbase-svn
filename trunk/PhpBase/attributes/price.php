@@ -19,7 +19,7 @@ function gb_suggest_price($value)
 
 function gb_cast_price(&$value)
 {
-    $value = preg_replace('/[^0-9]+/','', $value);
+    $value = preg_replace('/[^0-9^\.]+/','', $value);
     $value = number_format($value,2,'.','');
     $value = $value == 0.00 ? '' : $value;
 }
