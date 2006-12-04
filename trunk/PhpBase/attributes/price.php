@@ -13,7 +13,7 @@ function gb_validate_price($value)
 
 function gb_suggest_price($value)
 {
-    $value = preg_replace('/[^0-9]+/','', $value);
+    $value = preg_replace('/[^0-9^\.]+/','', $value);
     return $value == 0 ? '' : $value;
 }
 
